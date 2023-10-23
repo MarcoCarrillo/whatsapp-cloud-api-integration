@@ -34,41 +34,47 @@ app.get("/webhook", (req, res) => {
 app.post("/webhook", (req, res) => {
     const body = req.body;
 
-    console.log(JSON.stringify(body, null, 2));
+    try {
 
-    if (body.object) {
-        console.log('INSIDE BODY');
-        if (body.entry &&
-            body.entry[0].changes[0].value.messages &&
-            body.entry[0].changes[0].value.messages[0]) {
-            console.log('INSIDE PROPERTIES');
-            const phoneNumberId = body.entry[0].changes[0].value.metadata.phone_number_id;
-            const from = body.entry[0].changes[0].value.messages[0].from;
-            const messageBody = body.entry[0].changes[0].value.messages[0].text.body;
 
-            console.log('phoneNumberId->', phoneNumberId);
-            console.log('from->', from);
-            console.log('messageBody->', messageBody);
+        console.log(JSON.stringify(body, null, 2));
 
-            axios({
-                method: 'POST',
-                url: `https://graph.facebook.com/${VERSION}/${phoneNumberId}/messages?access_token=${TOKEN}`,
-                data: {
-                    messaging_product: "whatsapp",
-                    to: from,
-                    text: {
-                        body: 'Hola mundo',
+        if (body.object) {
+            console.log('INSIDE BODY');
+            if (body.entry &&
+                body.entry[0].changes[0].value.messages &&
+                body.entry[0].changes[0].value.messages[0]) {
+                console.log('INSIDE PROPERTIES');
+                const phoneNumberId = body.entry[0].changes[0].value.metadata.phone_number_id;
+                const from = body.entry[0].changes[0].value.messages[0].from;
+                const messageBody = body.entry[0].changes[0].value.messages[0].text.body;
+
+                console.log('phoneNumberId->', phoneNumberId);
+                console.log('from->', from);
+                console.log('messageBody->', messageBody);
+
+                axios({
+                    method: "POST",
+                    url: `https://graph.facebook.com/v18.0/${phoneNumberId}/messages?access_token=${TOKEN}`,
+                    data: {
+                        messaging_product: "whatsapp",
+                        to: from,
+                        text: {
+                            body: `Hola, tu mensaje es ${messageBody}`,
+                        }
+                    },
+                    headers: {
+                        "Content-Type": "application/json",
                     }
-                },
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            });
+                });
 
-            res.sendStatus(200);
-        } else {
-            res.sendStatus(404);
+                res.sendStatus(200);
+            } else {
+                res.sendStatus(404);
+            }
         }
+    } catch (error) {
+        console.log('ERROR---------->', error);
     }
 
 });
