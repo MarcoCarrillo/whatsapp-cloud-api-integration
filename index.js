@@ -59,7 +59,7 @@ app.post("/webhook", (req, res) => {
                     url: `https://graph.facebook.com/v18.0/${phoneNumberId}/messages?access_token=${TOKEN}`,
                     data: {
                         messaging_product: "whatsapp",
-                        to: from,
+                        to: "526182459409",
                         text: {
                             body: `Hola, tu mensaje es ${messageBody}`,
                         }
