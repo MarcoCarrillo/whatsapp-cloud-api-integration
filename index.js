@@ -37,12 +37,18 @@ app.post("/webhook", (req, res) => {
     console.log(JSON.stringify(body, null, 2));
 
     if (body.object) {
+        console.log('INSIDE BODY');
         if (body.entry &&
-            body.entry[0].changes[0].value.message &&
-            body.entry[0].changes[0].value.message[0]) {
+            body.entry[0].changes[0].value.messages &&
+            body.entry[0].changes[0].value.messages[0]) {
+            console.log('INSIDE PROPERTIES');
             const phoneNumberId = body.entry[0].changes[0].value.metadata.phone_number_id;
             const from = body.entry[0].changes[0].value.messages[0].from;
             const messageBody = body.entry[0].changes[0].value.messages[0].text.body;
+
+            console.log('phoneNumberId->', phoneNumberId);
+            console.log('from->', from);
+            console.log('messageBody->', messageBody);
 
             axios({
                 method: 'POST',
