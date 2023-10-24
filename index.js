@@ -47,6 +47,7 @@ app.post("/webhook", (req, res) => {
                 body.entry[0].changes[0].value.messages[0]) {
                 console.log('INSIDE PROPERTIES');
                 const phoneNumberId = body.entry[0].changes[0].value.metadata.phone_number_id;
+                const name = body.entry[0].changes[0].value.contacts[0].profile.name;
                 const from = body.entry[0].changes[0].value.messages[0].from;
                 const messageBody = body.entry[0].changes[0].value.messages[0].text.body;
 
@@ -61,7 +62,7 @@ app.post("/webhook", (req, res) => {
                         messaging_product: "whatsapp",
                         to: "526182459409",
                         text: {
-                            body: `Hola, tu mensaje es ${messageBody}`,
+                            body: `Hola ${name}, tu mensaje es ${messageBody}`,
                         }
                     },
                     headers: {
